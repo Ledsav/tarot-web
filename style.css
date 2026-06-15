@@ -201,3 +201,86 @@ body {
   color: var(--ink);
   max-width: 36ch;
 }
+
+/* ===== EMAIL FORM ===== */
+.email-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+
+.form-row {
+  display: flex;
+}
+
+.email-form input[type="email"] {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--ink);
+  border-right: none;
+  background: rgba(242, 232, 213, 0.5);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.email-form input[type="email"]::placeholder {
+  color: rgba(26, 20, 18, 0.35);
+}
+
+.email-form input[type="email"]:focus {
+  border-color: var(--oxblood);
+}
+
+.email-form button[type="submit"] {
+  padding: 0.75rem 1.5rem;
+  background: var(--ink);
+  color: var(--parchment);
+  border: 1.5px solid var(--ink);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.email-form button[type="submit"]:hover {
+  background: var(--oxblood);
+  border-color: var(--oxblood);
+}
+
+.email-form button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-error {
+  font-size: 0.8rem;
+  color: var(--oxblood);
+  min-height: 1.2em;
+}
+
+/* ===== SUCCESS STATE ===== */
+.form-success {
+  display: none;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  font-style: italic;
+}
+
+.form-success.visible {
+  display: block;
+  animation: content-reveal 0.6s var(--ease-out) forwards;
+}
