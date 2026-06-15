@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LUX — Tarot Readings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+
+  <img class="smoke smoke-1" src="design/assets/smoke_background_removed_1.png" alt="" aria-hidden="true">
+  <img class="smoke smoke-2" src="design/assets/smoke_background_removed_2.png" alt="" aria-hidden="true">
+  <img class="smoke smoke-3" src="design/assets/smoke_background_removed_3.png" alt="" aria-hidden="true">
+  <img class="smoke smoke-4" src="design/assets/smoke_background_removed_4.png" alt="" aria-hidden="true">
+
+  <main class="page">
+    <section class="content">
+      <p class="wordmark">LUX</p>
+      <h1 class="headline">Do you dare to <em>know</em>?</h1>
+      <p class="body-copy">
+        Readings open soon. Leave your email and you'll be the first to receive yours.
+      </p>
+      <form class="email-form" id="waitlist-form" novalidate>
+        <label for="email" class="form-label">Reserve your place</label>
+        <div class="form-row">
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="your@email.com"
+            required
+            autocomplete="email"
+          >
+          <button type="submit">JOIN →</button>
+        </div>
+        <p class="form-error" id="form-error" role="alert"></p>
+      </form>
+      <p class="form-success" id="form-success" role="status"></p>
+    </section>
+
+    <div class="arm-wrap" aria-hidden="true">
+      <img class="arm-img" src="design/assets/harm.png" alt="">
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
