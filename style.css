@@ -78,16 +78,19 @@ body {
   }
 
   .content {
-    padding: 2rem 1.5rem 10rem;
+    padding: 2rem 1.5rem 3rem;
+    position: relative;
+    z-index: 3;
   }
 
   .arm-wrap {
     position: fixed;
     bottom: 0;
     right: 0;
-    width: 55vw;
+    width: 38vw;
     height: auto;
-    overflow: visible;
+    max-height: 40vh;
+    overflow: hidden;
     z-index: 1;
   }
 }
@@ -97,79 +100,76 @@ body {
   position: fixed;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.8;
+  opacity: 0.95;
   display: block;
 }
 
-/* smoke-1: L-shape — top-left corner */
+/* smoke-1: L-shape — top-left, covers top half */
 .smoke-1 {
-  top: -5%;
-  left: -5%;
-  width: 55%;
-  max-width: 600px;
+  top: -20%;
+  left: -10%;
+  width: 90%;
 }
 
-/* smoke-2: horizontal — center-bottom */
+/* smoke-2: horizontal — covers full bottom */
 .smoke-2 {
-  bottom: 0;
+  bottom: -10%;
   left: 50%;
   transform: translateX(-50%);
-  width: 60%;
-  max-width: 700px;
+  width: 115%;
 }
 
-/* smoke-3: vertical pillar — right center */
+/* smoke-3: vertical pillar — right side */
 .smoke-3 {
-  top: 15%;
-  right: 28%;
-  width: 28%;
-  max-width: 350px;
+  top: 5%;
+  right: -15%;
+  width: 65%;
 }
 
-/* smoke-4: round puff — bottom-right */
+/* smoke-4: round puff — center-left */
 .smoke-4 {
-  bottom: 8%;
-  right: 3%;
-  width: 28%;
-  max-width: 380px;
+  top: 25%;
+  left: -5%;
+  width: 65%;
 }
 
 @media (max-width: 640px) {
   .smoke-3 { display: none; }
-  .smoke-2 { width: 85%; }
-  .smoke-4 { width: 45%; }
+  .smoke-1 { width: 110%; }
+  .smoke-2 { width: 130%; }
+  .smoke-4 { width: 80%; top: 35%; }
 }
 
 /* ===== SMOKE ANIMATIONS ===== */
 
 /* smoke-1 settles at opacity 0.08 — permanent atmospheric residue */
 @keyframes smoke-1-exit {
-  from { opacity: 0.8; transform: translate(0, 0); }
-  to   { opacity: 0.08; transform: translate(-60px, -40px); }
+  from { opacity: 0.95; transform: translate(0, 0); }
+  to   { opacity: 0.08; transform: translate(-130px, -90px); }
 }
 
 /* smoke-2 disappears completely */
 @keyframes smoke-2-exit {
-  from { opacity: 0.8; transform: translateX(-50%) translateY(0); }
-  to   { opacity: 0;   transform: translateX(-50%) translateY(80px); }
+  from { opacity: 0.95; transform: translateX(-50%) translateY(0); }
+  to   { opacity: 0;    transform: translateX(-50%) translateY(180px); }
 }
 
 /* smoke-3 disappears completely */
 @keyframes smoke-3-exit {
-  from { opacity: 0.8; transform: translate(0, 0); }
-  to   { opacity: 0;   transform: translate(60px, -30px); }
+  from { opacity: 0.95; transform: translate(0, 0); }
+  to   { opacity: 0;    transform: translate(160px, -60px); }
 }
 
 /* smoke-4 settles at opacity 0.08 — permanent atmospheric residue */
 @keyframes smoke-4-exit {
-  from { opacity: 0.8; transform: translate(0, 0); }
-  to   { opacity: 0.08; transform: translate(40px, 60px); }
+  from { opacity: 0.95; transform: translate(0, 0); }
+  to   { opacity: 0.08; transform: translate(-70px, 110px); }
 }
 
-.smoke-1 { animation: smoke-1-exit 1.4s var(--ease-out) 0.80s forwards; }
-.smoke-2 { animation: smoke-2-exit 1.4s var(--ease-out) 0.90s forwards; }
-.smoke-3 { animation: smoke-3-exit 1.4s var(--ease-out) 0.85s forwards; }
-.smoke-4 { animation: smoke-4-exit 1.4s var(--ease-out) 0.80s forwards; }
+.smoke-1 { animation: smoke-1-exit 1.6s var(--ease-out) 0.80s forwards; }
+.smoke-2 { animation: smoke-2-exit 1.6s var(--ease-out) 0.90s forwards; }
+.smoke-3 { animation: smoke-3-exit 1.6s var(--ease-out) 0.85s forwards; }
+.smoke-4 { animation: smoke-4-exit 1.6s var(--ease-out) 0.80s forwards; }
 
 /* ===== WORDMARK ===== */
 .wordmark {
@@ -184,7 +184,7 @@ body {
 .headline {
   font-family: 'Playfair Display', serif;
   font-weight: 700;
-  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-size: clamp(3.2rem, 7.5vw, 6.5rem);
   line-height: 1.1;
   color: var(--ink);
 }
@@ -196,10 +196,11 @@ body {
 
 /* ===== BODY COPY ===== */
 .body-copy {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--ink);
-  max-width: 36ch;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(26, 20, 18, 0.72);
+  max-width: 38ch;
+  font-style: italic;
 }
 
 /* ===== EMAIL FORM ===== */
@@ -210,11 +211,11 @@ body {
 }
 
 .form-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.06em;
-  color: var(--ink);
-  opacity: 0.6;
-  text-transform: uppercase;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  color: var(--oxblood);
 }
 
 .form-row {
@@ -223,12 +224,13 @@ body {
 
 .email-form input[type="email"] {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: 0.9rem 1.2rem;
   border: 1.5px solid var(--ink);
   border-right: none;
-  background: rgba(242, 232, 213, 0.5);
+  border-radius: 3px 0 0 3px;
+  background: rgba(242, 232, 213, 0.6);
   font-family: 'Inter', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--ink);
   outline: none;
   transition: border-color 0.2s;
@@ -243,10 +245,11 @@ body {
 }
 
 .email-form button[type="submit"] {
-  padding: 0.75rem 1.5rem;
-  background: var(--ink);
+  padding: 0.9rem 1.6rem;
+  background: var(--oxblood);
   color: var(--parchment);
-  border: 1.5px solid var(--ink);
+  border: 1.5px solid var(--oxblood);
+  border-radius: 0 3px 3px 0;
   font-family: 'Inter', sans-serif;
   font-size: 0.85rem;
   letter-spacing: 0.1em;
@@ -256,8 +259,8 @@ body {
 }
 
 .email-form button[type="submit"]:hover {
-  background: var(--oxblood);
-  border-color: var(--oxblood);
+  background: var(--terracotta);
+  border-color: var(--terracotta);
 }
 
 .email-form button[type="submit"]:disabled {
