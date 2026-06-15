@@ -1,0 +1,44 @@
+/* ===== RESET ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== VARIABLES ===== */
+:root {
+  --parchment: #F2E8D5;
+  --oxblood: #6B1A1A;
+  --gold: #C9A84C;
+  --ink: #1A1412;
+  --terracotta: #B85C38;
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ===== BASE ===== */
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #1A1412;
+  color: var(--ink);
+  overflow: hidden;
+}
+
+/* ===== BACKGROUND ===== */
+.bg {
+  position: fixed;
+  inset: 0;
+  background-image: url('design/assets/background.png');
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  opacity: 0;
+  animation: bg-fade 0.8s var(--ease-out) forwards;
+}
+
+@keyframes bg-fade {
+  to { opacity: 1; }
+}
