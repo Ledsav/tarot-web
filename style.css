@@ -91,3 +91,51 @@ body {
     z-index: 1;
   }
 }
+
+/* ===== SMOKE CLOUDS ===== */
+.smoke {
+  position: fixed;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.8;
+  display: block;
+}
+
+/* smoke-1: L-shape — top-left corner */
+.smoke-1 {
+  top: -5%;
+  left: -5%;
+  width: 55%;
+  max-width: 600px;
+}
+
+/* smoke-2: horizontal — center-bottom */
+.smoke-2 {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  max-width: 700px;
+}
+
+/* smoke-3: vertical pillar — right center */
+.smoke-3 {
+  top: 15%;
+  right: 28%;
+  width: 28%;
+  max-width: 350px;
+}
+
+/* smoke-4: round puff — bottom-right */
+.smoke-4 {
+  bottom: 8%;
+  right: 3%;
+  width: 28%;
+  max-width: 380px;
+}
+
+@media (max-width: 640px) {
+  .smoke-3 { display: none; }
+  .smoke-2 { width: 85%; }
+  .smoke-4 { width: 45%; }
+}
