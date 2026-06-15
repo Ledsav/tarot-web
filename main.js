@@ -1,6 +1,7 @@
 const SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxzK1XY99_2VTiRve-6czO08UdvZ6Ok2VoO8i1_otCeKEEsK2slhzczX8FKs5a2Ba5X/exec';
 
 const form = document.getElementById('waitlist-form');
+const formZone = document.getElementById('form-zone');
 const emailInput = document.getElementById('email');
 const errorEl = document.getElementById('form-error');
 const successEl = document.getElementById('form-success');
@@ -26,7 +27,7 @@ form.addEventListener('submit', async (e) => {
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ email })
     });
-    form.style.display = 'none';
+    formZone.classList.add('submitted');
     successEl.textContent = "You're on the list. The cards will find you.";
     successEl.classList.add('visible');
   } catch {

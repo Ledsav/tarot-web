@@ -182,6 +182,17 @@ body {
   font-style: italic;
 }
 
+/* ===== FORM ZONE (reserves height so success swap doesn't shrink column) ===== */
+.form-zone {
+  position: relative;
+}
+
+.form-zone.submitted .email-form {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s var(--ease-out);
+}
+
 /* ===== EMAIL FORM ===== */
 .email-form {
   display: flex;
@@ -265,19 +276,27 @@ body {
   margin-top: 0.4rem;
 }
 
-/* ===== SUCCESS STATE ===== */
+/* ===== SUCCESS STATE (overlays the form within .form-zone) ===== */
 .form-success {
-  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
   font-family: 'Playfair Display', serif;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   line-height: 1.6;
   font-style: italic;
   color: var(--ink);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .form-success.visible {
-  display: block;
-  animation: content-reveal 0.6s var(--ease-out) forwards;
+  pointer-events: auto;
+  animation: content-reveal 0.6s var(--ease-out) 0.2s forwards;
 }
 
 /* ===== ARM (harm2.png) — single hero visual ===== */
