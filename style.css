@@ -139,3 +139,34 @@ body {
   .smoke-2 { width: 85%; }
   .smoke-4 { width: 45%; }
 }
+
+/* ===== SMOKE ANIMATIONS ===== */
+
+/* smoke-1 settles at opacity 0.08 — permanent atmospheric residue */
+@keyframes smoke-1-exit {
+  from { opacity: 0.8; transform: translate(0, 0); }
+  to   { opacity: 0.08; transform: translate(-60px, -40px); }
+}
+
+/* smoke-2 disappears completely */
+@keyframes smoke-2-exit {
+  from { opacity: 0.8; transform: translateX(-50%) translateY(0); }
+  to   { opacity: 0;   transform: translateX(-50%) translateY(80px); }
+}
+
+/* smoke-3 disappears completely */
+@keyframes smoke-3-exit {
+  from { opacity: 0.8; transform: translate(0, 0); }
+  to   { opacity: 0;   transform: translate(60px, -30px); }
+}
+
+/* smoke-4 settles at opacity 0.08 — permanent atmospheric residue */
+@keyframes smoke-4-exit {
+  from { opacity: 0.8; transform: translate(0, 0); }
+  to   { opacity: 0.08; transform: translate(40px, 60px); }
+}
+
+.smoke-1 { animation: smoke-1-exit 1.4s var(--ease-out) 0.80s forwards; }
+.smoke-2 { animation: smoke-2-exit 1.4s var(--ease-out) 0.90s forwards; }
+.smoke-3 { animation: smoke-3-exit 1.4s var(--ease-out) 0.85s forwards; }
+.smoke-4 { animation: smoke-4-exit 1.4s var(--ease-out) 0.80s forwards; }
