@@ -170,3 +170,34 @@ body {
 .smoke-2 { animation: smoke-2-exit 1.4s var(--ease-out) 0.90s forwards; }
 .smoke-3 { animation: smoke-3-exit 1.4s var(--ease-out) 0.85s forwards; }
 .smoke-4 { animation: smoke-4-exit 1.4s var(--ease-out) 0.80s forwards; }
+
+/* ===== WORDMARK ===== */
+.wordmark {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+}
+
+/* ===== HEADLINE ===== */
+.headline {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.headline em {
+  font-style: italic;
+  color: var(--oxblood);
+}
+
+/* ===== BODY COPY ===== */
+.body-copy {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 36ch;
+}
