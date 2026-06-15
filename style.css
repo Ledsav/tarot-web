@@ -56,7 +56,7 @@ body {
 .content {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
   padding: clamp(2rem, 5vw, 5rem);
 }
 
@@ -173,19 +173,21 @@ body {
 
 /* ===== WORDMARK ===== */
 .wordmark {
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 0.25em;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 0.75rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
   color: var(--gold);
 }
 
 /* ===== HEADLINE ===== */
 .headline {
   font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: clamp(3.2rem, 7.5vw, 6.5rem);
-  line-height: 1.1;
+  font-weight: 900;
+  font-size: clamp(4rem, 9vw, 8rem);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 
@@ -207,7 +209,8 @@ body {
 .email-form {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0;
+  max-width: 420px;
 }
 
 .form-label {
@@ -216,71 +219,79 @@ body {
   font-style: italic;
   letter-spacing: 0.02em;
   color: var(--oxblood);
+  margin-bottom: 1rem;
 }
 
 .form-row {
   display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .email-form input[type="email"] {
-  flex: 1;
-  padding: 0.9rem 1.2rem;
-  border: 1.5px solid var(--ink);
-  border-right: none;
-  border-radius: 3px 0 0 3px;
-  background: rgba(242, 232, 213, 0.6);
+  width: 100%;
+  padding: 0.6rem 0;
+  border: none;
+  border-bottom: 1.5px solid rgba(26, 20, 18, 0.35);
+  border-radius: 0;
+  background: transparent;
   font-family: 'Inter', sans-serif;
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--ink);
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.25s;
 }
 
 .email-form input[type="email"]::placeholder {
-  color: rgba(26, 20, 18, 0.35);
+  color: rgba(26, 20, 18, 0.3);
+  font-style: italic;
 }
 
 .email-form input[type="email"]:focus {
-  border-color: var(--oxblood);
+  border-bottom-color: var(--oxblood);
 }
 
 .email-form button[type="submit"] {
-  padding: 0.9rem 1.6rem;
-  background: var(--oxblood);
+  padding: 1rem 2rem;
+  background: var(--ink);
   color: var(--parchment);
-  border: 1.5px solid var(--oxblood);
-  border-radius: 0 3px 3px 0;
+  border: none;
+  border-radius: 0;
   font-family: 'Inter', sans-serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.1em;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
   cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.25s, letter-spacing 0.25s;
 }
 
 .email-form button[type="submit"]:hover {
-  background: var(--terracotta);
-  border-color: var(--terracotta);
+  background: var(--oxblood);
+  letter-spacing: 0.28em;
 }
 
 .email-form button[type="submit"]:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .form-error {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--oxblood);
+  font-style: italic;
   min-height: 1.2em;
+  margin-top: 0.4rem;
 }
 
 /* ===== SUCCESS STATE ===== */
 .form-success {
   display: none;
-  font-size: 1rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
   line-height: 1.6;
-  color: var(--ink);
   font-style: italic;
+  color: var(--ink);
 }
 
 .form-success.visible {
