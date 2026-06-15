@@ -1,4 +1,4 @@
-const FORM_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
+const SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxzK1XY99_2VTiRve-6czO08UdvZ6Ok2VoO8i1_otCeKEEsK2slhzczX8FKs5a2Ba5X/exec';
 
 const form = document.getElementById('waitlist-form');
 const emailInput = document.getElementById('email');
@@ -20,26 +20,15 @@ form.addEventListener('submit', async (e) => {
   btn.textContent = '...';
 
   try {
-    const res = await fetch(FORM_ENDPOINT, {
+    await fetch(SHEETS_ENDPOINT, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ email })
     });
-
-    if (res.ok) {
-      form.style.display = 'none';
-      successEl.textContent = "You're on the list. The cards will find you.";
-      successEl.classList.add('visible');
-    } else {
-      const data = await res.json().catch(() => ({}));
-      const msg = data.errors?.[0]?.message || 'Something went wrong. Please try again.';
-      errorEl.textContent = msg;
-      btn.disabled = false;
-      btn.textContent = 'JOIN →';
-    }
+    form.style.display = 'none';
+    successEl.textContent = "You're on the list. The cards will find you.";
+    successEl.classList.add('visible');
   } catch {
     errorEl.textContent = 'Unable to connect. Please try again.';
     btn.disabled = false;
