@@ -350,3 +350,30 @@ body {
   opacity: 0;
   animation: content-reveal 0.6s var(--ease-out) 1.7s both;
 }
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  .bg,
+  .wordmark,
+  .headline,
+  .body-copy,
+  .email-form,
+  .arm-img {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .smoke-1,
+  .smoke-4 {
+    animation: none !important;
+    opacity: 0.08 !important;
+    transform: translate(-60px, -40px) !important;
+  }
+
+  .smoke-2,
+  .smoke-3 {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
