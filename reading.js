@@ -9,6 +9,33 @@ const readingZone = document.querySelector('.reading-zone');
 const readingEl = document.getElementById('reading');
 const statusEl = document.getElementById('reading-status');
 
+const audio = document.getElementById('bg-audio');
+const soundToggle = document.getElementById('sound-toggle');
+
+let soundOn = localStorage.getItem('lux-sound') === 'on';
+
+function reflectSound() {
+  soundToggle.textContent = soundOn ? '♪ on' : '♪ off';
+  soundToggle.setAttribute('aria-pressed', String(soundOn));
+  if (soundOn) {
+    audio.play().catch(() => {}); // ignored until a user gesture has occurred
+  } else {
+    audio.pause();
+  }
+}
+
+soundToggle.addEventListener('click', () => {
+  soundOn = !soundOn;
+  localStorage.setItem('lux-sound', soundOn ? 'on' : 'off');
+  reflectSound();
+});
+
+function startAudioIfEnabled() {
+  if (soundOn) audio.play().catch(() => {});
+}
+
+reflectSound();
+
 let currentSpread = [];
 
 function fallbackText(spread) {
@@ -38,6 +65,7 @@ function renderSpread(spread) {
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
+  startAudioIfEnabled();
   currentSpread = drawSpread(DECK);
   renderSpread(currentSpread);
   readingZone.hidden = false;
