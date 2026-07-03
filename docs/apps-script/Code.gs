@@ -32,8 +32,8 @@ function generateReading(body) {
   var system =
     'You are LUX, a tarot reader who is warm but clear and direct. Given a 3-card ' +
     'Past/Present/Future spread and the querent\'s question, write exactly 3 short ' +
-    'paragraphs, one per card in order (Past, then Present, then Future). In each ' +
-    'paragraph: name the card, state plainly what it means in its position and ' +
+    'paragraphs (2-3 sentences each), one per card in order (Past, then Present, then ' +
+    'Future). In each paragraph: name the card, state plainly what it means in its position and ' +
     'orientation (upright/reversed), then connect that meaning concretely to the ' +
     'question in direct, everyday language — say what is actually going on and what it ' +
     'implies, not just mood or imagery. Then add a final short paragraph of 2-3 ' +
@@ -51,7 +51,7 @@ function generateReading(body) {
     payload: JSON.stringify({
       model: 'openai/gpt-oss-120b',
       temperature: 0.6,
-      max_tokens: 600,
+      max_tokens: 800,
       messages: [
         { role: 'system', content: system },
         { role: 'user', content: user },
@@ -70,8 +70,8 @@ function generateReading(body) {
 // 100k tokens/day; a reading is ~1k tokens). Caps are GLOBAL, not per-user, because
 // Apps Script doesn't expose the caller's IP. When a cap is hit, the reading request
 // errors and the site falls back to its curated card meanings.
-var RL_PER_MINUTE = 10;   // stays under ~12k tokens/min
-var RL_PER_DAY = 90;      // stays under 100k tokens/day
+var RL_PER_MINUTE = 10;   // stays under ~12k tokens/min (~1.2k tokens/reading)
+var RL_PER_DAY = 80;      // stays under 100k tokens/day (~1.2k tokens/reading)
 
 function checkRateLimit() {
   var lock = LockService.getScriptLock();
