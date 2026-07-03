@@ -1,0 +1,110 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --parchment: #F2E8D5;
+  --oxblood: #6B1A1A;
+  --gold: #C9A84C;
+  --ink: #1A1412;
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+html, body { min-height: 100%; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--ink);
+  color: var(--parchment);
+  overflow-x: hidden;
+}
+.bg {
+  position: fixed; inset: 0; z-index: 0;
+  background: url('design/assets/background.png') center / cover no-repeat;
+  opacity: 0.5;
+}
+
+.reading-page {
+  position: relative; z-index: 1;
+  max-width: 760px; margin: 0 auto;
+  padding: 4rem 1.25rem 5rem;
+  display: flex; flex-direction: column; gap: 2.5rem;
+}
+.wordmark { font-family: 'Playfair Display', serif; letter-spacing: 0.4em; color: var(--gold); font-size: 0.9rem; }
+.headline { font-family: 'Playfair Display', serif; font-weight: 900; font-size: clamp(2rem, 7vw, 3.25rem); line-height: 1.05; margin-top: 0.5rem; }
+
+.ask-form { display: flex; flex-direction: column; gap: 0.9rem; }
+.form-label { color: var(--gold); font-size: 0.85rem; letter-spacing: 0.05em; }
+#question {
+  background: rgba(242, 232, 213, 0.06); border: 1px solid rgba(201, 168, 76, 0.4);
+  color: var(--parchment); font-family: inherit; font-size: 1rem;
+  padding: 0.9rem 1rem; border-radius: 4px; resize: vertical;
+}
+#question::placeholder { color: rgba(242, 232, 213, 0.4); }
+#draw-btn, .retry-btn {
+  align-self: flex-start; cursor: pointer;
+  background: var(--oxblood); color: var(--parchment);
+  border: 1px solid var(--gold); font-family: 'Playfair Display', serif;
+  letter-spacing: 0.12em; padding: 0.85rem 1.6rem; border-radius: 4px;
+  transition: background 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+#draw-btn:hover, .retry-btn:hover { background: #7f2020; transform: translateY(-2px); }
+#draw-btn:disabled { opacity: 0.55; cursor: wait; transform: none; }
+
+/* Prompt chips */
+.prompt-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.prompt-chips-label {
+  width: 100%; margin-bottom: 0.1rem;
+  color: rgba(242, 232, 213, 0.55); font-size: 0.8rem; font-style: italic;
+}
+.prompt-chip {
+  cursor: pointer;
+  background: rgba(201, 168, 76, 0.08); color: var(--parchment);
+  border: 1px solid rgba(201, 168, 76, 0.4); border-radius: 999px;
+  font-family: 'Inter', sans-serif; font-size: 0.82rem;
+  padding: 0.4rem 0.85rem;
+  transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+}
+.prompt-chip:hover { background: rgba(201, 168, 76, 0.2); border-color: var(--gold); }
+
+/* Spread */
+.spread { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.card-slot { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+.card {
+  position: relative; width: 100%; aspect-ratio: 300 / 520;
+  transform-style: preserve-3d; transition: transform 0.7s var(--ease-out);
+}
+.card.revealed { transform: rotateY(180deg); }
+.card-face {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  border-radius: 8px; overflow: hidden;
+  border: 1px solid rgba(201, 168, 76, 0.5);
+}
+.card-back { background: url('design/assets/cards/card-back.svg') center / cover no-repeat; }
+.card-front { transform: rotateY(180deg); background: var(--ink); }
+.card-front img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-front.reversed img { transform: rotate(180deg); }
+.card-position { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; }
+
+/* Reading */
+.reading-zone { display: flex; flex-direction: column; gap: 1rem; }
+.reading-status { color: var(--gold); font-style: italic; min-height: 1.2em; }
+.reading { font-size: 1.05rem; line-height: 1.7; white-space: pre-wrap; }
+.reading p { margin-bottom: 0.9rem; }
+.retry-btn { align-self: center; }
+
+/* Sound toggle */
+.sound-toggle {
+  position: fixed; top: 1rem; right: 1rem; z-index: 3; cursor: pointer;
+  background: rgba(26, 20, 18, 0.7); color: var(--gold);
+  border: 1px solid var(--gold); border-radius: 999px;
+  font-family: 'Inter', sans-serif; font-size: 0.8rem; letter-spacing: 0.05em;
+  padding: 0.45rem 0.9rem;
+}
+
+@media (max-width: 520px) {
+  .spread { gap: 0.5rem; }
+  .card-position { font-size: 0.65rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: none; }
+  #draw-btn, .retry-btn { transition: none; }
+}
