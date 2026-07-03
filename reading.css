@@ -167,11 +167,6 @@ body {
   padding: 0.45rem 0.9rem;
 }
 
-@media (max-width: 520px) {
-  .spread { gap: 0.5rem; }
-  .card-position { font-size: 0.65rem; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .card, .stage-card .card { transition: none; }
   #draw-btn, .retry-btn, .stage-next, .pip { transition: none; }
