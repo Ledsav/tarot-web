@@ -354,28 +354,28 @@ body {
 .cta-reading {
   display: inline-block;
   align-self: flex-start;
-  margin: 1.5rem 0 0.25rem;
-  padding: 0.95rem 1.7rem;
-  background: var(--oxblood);
-  color: var(--parchment);
+  padding: 0.8rem 1.5rem;
+  background: transparent;
+  color: var(--ink);
   font-family: 'Inter', sans-serif;
   font-size: 0.72rem;
   font-weight: 400;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   text-decoration: none;
-  border: 1px solid var(--oxblood);
+  border: 1px solid rgba(107, 26, 26, 0.5);
   border-radius: 2px;
-  box-shadow: 0 6px 18px rgba(107, 26, 26, 0.28);
-  transition: background 0.25s var(--ease-out), letter-spacing 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+  transition: background 0.3s var(--ease-out), color 0.3s var(--ease-out),
+              border-color 0.3s var(--ease-out), letter-spacing 0.3s var(--ease-out);
   opacity: 0;
   animation: content-reveal 0.6s var(--ease-out) 1.7s both;
 }
 
 .cta-reading:hover {
-  background: #7f2020;
+  background: var(--oxblood);
+  color: var(--parchment);
+  border-color: var(--oxblood);
   letter-spacing: 0.26em;
-  transform: translateY(-2px);
 }
 
 /* ===== DESKTOP ===== */
