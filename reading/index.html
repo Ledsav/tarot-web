@@ -48,6 +48,13 @@
       </ol>
 
       <div class="stage-card-wrap">
+        <div class="deck-stack" aria-hidden="true">
+          <span class="deck-card"></span>
+          <span class="deck-card"></span>
+          <span class="deck-card"></span>
+          <span class="deck-card"></span>
+          <span class="deck-card"></span>
+        </div>
         <button type="button" class="stage-card" aria-label="Reveal the card">
           <div class="card">
             <div class="card-face card-back"></div>
@@ -66,7 +73,10 @@
     <section class="conclusion-zone" hidden>
       <div class="mini-cards" aria-hidden="true"></div>
       <div id="reading" class="reading"></div>
-      <button id="retry-btn" type="button" class="retry-btn">Ask the cards again</button>
+      <div class="conclusion-actions">
+        <button id="share-btn" type="button" class="share-btn">Share this reading</button>
+        <button id="retry-btn" type="button" class="retry-btn">Ask the cards again</button>
+      </div>
     </section>
   </main>
 

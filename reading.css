@@ -82,9 +82,10 @@ body {
 .pip.active { background: var(--gold); transform: scale(1.5); box-shadow: 0 0 10px rgba(201, 168, 76, 0.6); }
 
 /* The one big card */
-.stage-card-wrap { width: 100%; max-width: 300px; perspective: 1200px; }
+.stage-card-wrap { position: relative; width: 100%; max-width: 300px; perspective: 1200px; }
 .stage-card-wrap.floating { animation: float 3.2s ease-in-out infinite; }
 .stage-card {
+  position: relative; z-index: 2;
   display: block; width: 100%; padding: 0; border: 0; background: none;
   cursor: pointer;
 }
@@ -100,10 +101,28 @@ body {
 }
 /* .card must be positioned for the absolutely-placed faces */
 .stage-card .card { position: relative; }
-.card-back { background: url('design/assets/cards/card-back.svg') center / cover no-repeat; }
+.card-back { border: 0; background: url('design/assets/cards/card-back.svg') center / cover no-repeat; }
 .card-front { transform: rotateY(180deg); background: var(--ink); }
 .card-front img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .card-front.reversed img { transform: rotate(180deg); }
+
+/* Deck stack behind the face-down card — reads as "drawing from the deck" */
+.deck-stack {
+  position: absolute; inset: 0; z-index: 1;
+  transition: opacity 0.5s var(--ease-out);
+}
+.deck-card {
+  position: absolute; inset: 0; border-radius: 8px;
+  background: url('design/assets/cards/card-back.svg') center / cover no-repeat;
+  transform-origin: 50% 100%;
+}
+.deck-card:nth-child(1) { transform: translateY(5px)  scale(0.986) rotate(-2deg);   opacity: 0.85; }
+.deck-card:nth-child(2) { transform: translateY(10px) scale(0.972) rotate(1.5deg);  opacity: 0.66; }
+.deck-card:nth-child(3) { transform: translateY(15px) scale(0.958) rotate(-1deg);   opacity: 0.48; }
+.deck-card:nth-child(4) { transform: translateY(20px) scale(0.944) rotate(2.2deg);  opacity: 0.30; }
+.deck-card:nth-child(5) { transform: translateY(25px) scale(0.930) rotate(-2.6deg); opacity: 0.16; }
+/* Once the card flips (wrap loses .floating), the deck fades away */
+.stage-card-wrap:not(.floating) .deck-stack { opacity: 0; pointer-events: none; }
 
 .tap-hint {
   color: var(--gold); font-style: italic; font-size: 0.9rem;
@@ -146,14 +165,24 @@ body {
 .conclusion-zone { display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
 .mini-cards { display: flex; gap: 0.6rem; justify-content: center; }
 .mini-card {
-  width: 64px; aspect-ratio: 300 / 520; object-fit: cover;
+  width: clamp(88px, 26vw, 130px); aspect-ratio: 300 / 520; object-fit: cover;
   border-radius: 6px; border: 1px solid rgba(201, 168, 76, 0.5);
   animation: fadeInUp 0.5s var(--ease-out) both;
 }
 .mini-card.reversed { transform: rotate(180deg); }
 .reading { font-size: 1.05rem; line-height: 1.7; text-align: center; max-width: 52ch; }
 .reading p { margin-bottom: 0.9rem; }
+
+.conclusion-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
 .retry-btn { align-self: center; }
+.share-btn {
+  cursor: pointer; background: var(--gold); color: var(--ink);
+  border: 1px solid var(--gold); font-family: 'Playfair Display', serif;
+  letter-spacing: 0.12em; padding: 0.85rem 1.6rem; border-radius: 4px;
+  transition: background 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+.share-btn:hover { background: #d8b968; transform: translateY(-2px); }
+.share-btn.copied { background: #6f9a5f; color: var(--parchment); border-color: #6f9a5f; }
 
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
@@ -171,7 +200,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .card, .stage-card .card { transition: none; }
-  #draw-btn, .retry-btn, .stage-next, .pip { transition: none; }
+  #draw-btn, .retry-btn, .stage-next, .share-btn, .pip { transition: none; }
   .stage-card-wrap.floating,
   .tap-hint,
   .stage-meaning,

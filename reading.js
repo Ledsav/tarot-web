@@ -23,6 +23,7 @@ const conclusionZone = document.querySelector('.conclusion-zone');
 const miniCards = conclusionZone.querySelector('.mini-cards');
 const readingEl = document.getElementById('reading');
 const retryBtn = document.getElementById('retry-btn');
+const shareBtn = document.getElementById('share-btn');
 
 const audio = document.getElementById('bg-audio');
 const soundToggle = document.getElementById('sound-toggle');
@@ -208,6 +209,56 @@ form.addEventListener('submit', (e) => {
 
 stageCard.addEventListener('click', revealCurrent);
 nextBtn.addEventListener('click', goNext);
+
+// --- Share a simple text summary of the reading ---
+function buildSummary() {
+  const q = questionEl.value.trim();
+  const cardLines = state.spread.map((s) =>
+    `${s.position} — ${s.card.name}${s.orientation === 'reversed' ? ' (reversed)' : ''}`);
+  const conclusion = (state.parts && state.parts.conclusion) ||
+    'The cards have spoken.';
+  const url = location.origin + location.pathname;
+  return [
+    q ? `My tarot reading on: "${q}"` : 'My tarot reading',
+    '',
+    ...cardLines,
+    '',
+    conclusion,
+    '',
+    `Read yours at ${url}`,
+  ].join('\n');
+}
+
+function flashCopied() {
+  const original = shareBtn.textContent;
+  shareBtn.textContent = 'Copied!';
+  shareBtn.classList.add('copied');
+  setTimeout(() => {
+    shareBtn.textContent = original;
+    shareBtn.classList.remove('copied');
+  }, 1800);
+}
+
+async function shareReading() {
+  const text = buildSummary();
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: 'My LUX tarot reading', text });
+      return;
+    }
+  } catch (err) {
+    if (err && err.name === 'AbortError') return; // user dismissed the share sheet
+    // fall through to clipboard on any other share failure
+  }
+  try {
+    await navigator.clipboard.writeText(text);
+    flashCopied();
+  } catch {
+    /* nothing more we can do; leave the button as-is */
+  }
+}
+
+shareBtn.addEventListener('click', shareReading);
 
 retryBtn.addEventListener('click', () => {
   stage.hidden = true;
