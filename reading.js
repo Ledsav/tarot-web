@@ -106,7 +106,7 @@ function renderCurrentCard() {
   stageCardWrap.classList.add('floating');
   cardFront.classList.toggle('reversed', orientation === 'reversed');
   cardImg.src = card.image; // browser encodes spaces in the path
-  cardImg.alt = `${card.name}${orientation === 'reversed' ? ', reversed' : ''}`;
+  cardImg.alt = '';
   stagePosition.textContent = '';
   stageMeaning.hidden = true;
   stageMeaning.classList.remove('shimmer');
@@ -140,6 +140,7 @@ function revealCurrent() {
   const { card, orientation, position } = state.spread[state.index];
   cardEl.classList.add('revealed');
   stageCardWrap.classList.remove('floating');
+  cardImg.alt = `${card.name}${orientation === 'reversed' ? ', reversed' : ''}`;
   tapHint.hidden = true;
   stageCard.disabled = true;
   stageCard.setAttribute('aria-label', `${position}: ${card.name}`);
