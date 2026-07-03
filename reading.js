@@ -9,11 +9,7 @@ const questionEl = document.getElementById('question');
 
 const stage = document.getElementById('stage');
 const pips = [...stage.querySelectorAll('.pip')];
-const stageCardWrap = stage.querySelector('.stage-card-wrap');
-const stageCard = stage.querySelector('.stage-card');
-const cardEl = stage.querySelector('.card');
-const cardFront = stage.querySelector('.card-front');
-const cardImg = stage.querySelector('.card-front img');
+const fan = stage.querySelector('.card-fan');
 const tapHint = stage.querySelector('.tap-hint');
 const stagePosition = stage.querySelector('.stage-position');
 const stageMeaning = stage.querySelector('.stage-meaning');
@@ -46,10 +42,16 @@ function startAudioIfEnabled() { if (soundOn) audio.play().catch(() => {}); }
 reflectSound();
 
 // --- Reveal state machine ---
+const FAN_COUNT = 7;       // face-down cards fanned out at each step
+const FAN_SPREAD_DEG = 11; // angle between adjacent cards in the fan
+
+const prefersReducedMotion = () =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 const state = {
   spread: [],
   index: 0,
-  revealed: false, // is the current card flipped?
+  revealed: false, // has a card been picked & flipped for this position?
   parts: null,     // { cards, conclusion } once the reading (or fallback) is ready
 };
 
@@ -101,21 +103,32 @@ function updatePips() {
   });
 }
 
-function renderCurrentCard() {
-  const { card, orientation } = state.spread[state.index];
-  cardEl.classList.remove('revealed');
-  stageCardWrap.classList.add('floating');
-  cardFront.classList.toggle('reversed', orientation === 'reversed');
-  cardImg.src = card.image; // browser encodes spaces in the path
-  cardImg.alt = '';
+// Build a fresh fan of face-down cards for the current position. Every card is
+// identical (a back); whichever the user picks reveals the pre-drawn card — the
+// choice is an illusion, the spread was fixed at draw time.
+function renderFan() {
+  fan.innerHTML = '';
+  for (let i = 0; i < FAN_COUNT; i++) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'fan-card';
+    btn.setAttribute('aria-label', 'Pick this card');
+    const angle = (i - (FAN_COUNT - 1) / 2) * FAN_SPREAD_DEG;
+    btn.style.setProperty('--angle', angle + 'deg');
+    btn.style.zIndex = String(i); // later cards overlap on top, like a held fan
+    btn.innerHTML =
+      '<div class="card">' +
+        '<div class="card-face card-back"></div>' +
+        '<div class="card-face card-front"><img alt=""></div>' +
+      '</div>';
+    fan.appendChild(btn);
+  }
   stagePosition.textContent = '';
   stageMeaning.hidden = true;
   stageMeaning.classList.remove('shimmer');
   stageMeaning.textContent = '';
   nextBtn.hidden = true;
   tapHint.hidden = false;
-  stageCard.disabled = false;
-  stageCard.setAttribute('aria-label', 'Reveal the card');
   state.revealed = false;
   updatePips();
 }
@@ -135,16 +148,30 @@ function showMeaning() {
   }
 }
 
-function revealCurrent() {
+// The user picked a fan card: reveal the current position's card on it, send the
+// rest scattering, then flip the chosen one and show its meaning.
+function choose(cardBtn) {
   if (state.revealed) return;
   state.revealed = true;
   const { card, orientation, position } = state.spread[state.index];
-  cardEl.classList.add('revealed');
-  stageCardWrap.classList.remove('floating');
-  cardImg.alt = `${card.name}${orientation === 'reversed' ? ', reversed' : ''}`;
+
+  const front = cardBtn.querySelector('.card-front');
+  const img = cardBtn.querySelector('.card-front img');
+  front.classList.toggle('reversed', orientation === 'reversed');
+  img.src = card.image; // browser encodes spaces in the path
+  img.alt = `${card.name}${orientation === 'reversed' ? ', reversed' : ''}`;
+
+  cardBtn.style.zIndex = '10';
+  [...fan.children].forEach((c) => {
+    c.classList.add(c === cardBtn ? 'chosen' : 'dismissed');
+    c.disabled = true;
+  });
+
+  const flip = () => cardBtn.querySelector('.card').classList.add('revealed');
+  if (prefersReducedMotion()) flip();
+  else setTimeout(flip, 360); // let the card reach center before it turns
+
   tapHint.hidden = true;
-  stageCard.disabled = true;
-  stageCard.setAttribute('aria-label', `${position}: ${card.name}`);
   stagePosition.textContent =
     `${position} · ${card.name}${orientation === 'reversed' ? ' (reversed)' : ''}`;
   showMeaning();
@@ -157,7 +184,7 @@ function goNext() {
   // The seam: a future ad break slots in here, before advancing.
   if (state.index < state.spread.length - 1) {
     state.index += 1;
-    renderCurrentCard();
+    renderFan();
     stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } else {
     showConclusion();
@@ -202,12 +229,16 @@ form.addEventListener('submit', (e) => {
   form.hidden = true;
   conclusionZone.hidden = true;
   stage.hidden = false;
-  renderCurrentCard();
+  renderFan();
   fetchReading(state.spread); // one request, in the background
   stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
-stageCard.addEventListener('click', revealCurrent);
+// Pick any card in the fan (event-delegated, since the fan is rebuilt each step).
+fan.addEventListener('click', (e) => {
+  const card = e.target.closest('.fan-card');
+  if (card && fan.contains(card)) choose(card);
+});
 nextBtn.addEventListener('click', goNext);
 
 // --- Share a simple text summary of the reading ---

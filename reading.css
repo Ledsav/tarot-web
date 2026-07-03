@@ -81,48 +81,42 @@ body {
 .pip.done { background: rgba(201, 168, 76, 0.55); }
 .pip.active { background: var(--gold); transform: scale(1.5); box-shadow: 0 0 10px rgba(201, 168, 76, 0.6); }
 
-/* The one big card */
-.stage-card-wrap { position: relative; width: 100%; max-width: 300px; perspective: 1200px; }
-.stage-card-wrap.floating { animation: float 3.2s ease-in-out infinite; }
-.stage-card {
-  position: relative; z-index: 2;
-  display: block; width: 100%; padding: 0; border: 0; background: none;
-  cursor: pointer;
+/* Fanned deck — pick a card, for the illusion of choice */
+.card-fan {
+  position: relative; margin: 0 auto;
+  width: 100%; max-width: 340px;
+  height: clamp(250px, 66vw, 320px);
 }
-.stage-card:disabled { cursor: default; }
-.stage-card .card {
-  width: 100%; aspect-ratio: 300 / 520;
+.fan-card {
+  position: absolute; bottom: 0; left: 50%;
+  width: clamp(120px, 34vw, 150px);
+  margin-left: calc(clamp(120px, 34vw, 150px) * -0.5);
+  aspect-ratio: 300 / 520;
+  padding: 0; border: 0; background: none; cursor: pointer;
+  transform-origin: 50% 100%;
+  transform: rotate(var(--angle, 0deg));
+  transition: transform 0.5s var(--ease-out), opacity 0.5s var(--ease-out);
+  perspective: 1000px;
+}
+.fan-card:hover:not(.chosen):not(.dismissed) { transform: rotate(var(--angle, 0deg)) translateY(-18px); }
+.fan-card .card {
+  position: relative; width: 100%; height: 100%;
   transform-style: preserve-3d; transition: transform 0.7s var(--ease-out);
 }
-.stage-card .card.revealed { transform: rotateY(180deg); }
+.fan-card .card.revealed { transform: rotateY(180deg); }
+/* the chosen card straightens, rises to center, and grows */
+.fan-card.chosen { z-index: 10; cursor: default; transform: rotate(0deg) translateY(-6%) scale(1.35); }
+/* the others scatter downward and fade away */
+.fan-card.dismissed { opacity: 0; pointer-events: none; transform: rotate(var(--angle, 0deg)) translateY(48px) scale(0.9); }
+
 .card-face {
   position: absolute; inset: 0; backface-visibility: hidden;
   border-radius: 8px; overflow: hidden; border: 1px solid rgba(201, 168, 76, 0.5);
 }
-/* .card must be positioned for the absolutely-placed faces */
-.stage-card .card { position: relative; }
 .card-back { border: 0; background: url('design/assets/cards/card-back.svg') center / cover no-repeat; }
 .card-front { transform: rotateY(180deg); background: var(--ink); }
 .card-front img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .card-front.reversed img { transform: rotate(180deg); }
-
-/* Deck stack behind the face-down card — reads as "drawing from the deck" */
-.deck-stack {
-  position: absolute; inset: 0; z-index: 1;
-  transition: opacity 0.5s var(--ease-out);
-}
-.deck-card {
-  position: absolute; inset: 0; border-radius: 8px;
-  background: url('design/assets/cards/card-back.svg') center / cover no-repeat;
-  transform-origin: 50% 100%;
-}
-.deck-card:nth-child(1) { transform: translateY(5px)  scale(0.986) rotate(-2deg);   opacity: 0.85; }
-.deck-card:nth-child(2) { transform: translateY(10px) scale(0.972) rotate(1.5deg);  opacity: 0.66; }
-.deck-card:nth-child(3) { transform: translateY(15px) scale(0.958) rotate(-1deg);   opacity: 0.48; }
-.deck-card:nth-child(4) { transform: translateY(20px) scale(0.944) rotate(2.2deg);  opacity: 0.30; }
-.deck-card:nth-child(5) { transform: translateY(25px) scale(0.930) rotate(-2.6deg); opacity: 0.16; }
-/* Once the card flips (wrap loses .floating), the deck fades away */
-.stage-card-wrap:not(.floating) .deck-stack { opacity: 0; pointer-events: none; }
 
 .tap-hint {
   color: var(--gold); font-style: italic; font-size: 0.9rem;
@@ -184,7 +178,6 @@ body {
 .share-btn:hover { background: #d8b968; transform: translateY(-2px); }
 .share-btn.copied { background: #6f9a5f; color: var(--parchment); border-color: #6f9a5f; }
 
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -199,9 +192,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card, .stage-card .card { transition: none; }
+  .fan-card, .fan-card .card { transition: none; }
   #draw-btn, .retry-btn, .stage-next, .share-btn, .pip { transition: none; }
-  .stage-card-wrap.floating,
   .tap-hint,
   .stage-meaning,
   .stage-meaning.shimmer,
