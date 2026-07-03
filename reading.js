@@ -12,6 +12,10 @@ const statusEl = document.getElementById('reading-status');
 const audio = document.getElementById('bg-audio');
 const soundToggle = document.getElementById('sound-toggle');
 
+const GROQ_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxzK1XY99_2VTiRve-6czO08UdvZ6Ok2VoO8i1_otCeKEEsK2slhzczX8FKs5a2Ba5X/exec';
+
+const retryBtn = document.getElementById('retry-btn');
+
 let soundOn = localStorage.getItem('lux-sound') === 'on';
 
 function reflectSound() {
@@ -45,6 +49,51 @@ function fallbackText(spread) {
     .join('\n\n');
 }
 
+async function requestReading(spread) {
+  statusEl.textContent = 'The cards are speaking…';
+  readingEl.textContent = '';
+  retryBtn.hidden = true;
+  drawBtn.disabled = true;
+
+  const payload = {
+    type: 'reading',
+    question: questionEl.value.trim(),
+    cards: spread.map(s => ({
+      name: s.card.name,
+      orientation: s.orientation,
+      position: s.position,
+      meaning: s.orientation === 'reversed' ? s.card.reversed : s.card.upright,
+    })),
+  };
+
+  try {
+    const res = await fetch(GROQ_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' }, // simple request → no CORS preflight
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!data.reading) throw new Error(data.error || 'No reading returned');
+    statusEl.textContent = '';
+    renderReading(data.reading);
+  } catch (err) {
+    statusEl.textContent = 'The connection to the cards faltered — here is what they show plainly.';
+    renderReading(fallbackText(spread));
+    retryBtn.hidden = false;
+  } finally {
+    drawBtn.disabled = false;
+  }
+}
+
+function renderReading(text) {
+  readingEl.innerHTML = '';
+  text.split(/\n\s*\n/).forEach(para => {
+    const p = document.createElement('p');
+    p.textContent = para.trim();
+    readingEl.appendChild(p);
+  });
+}
+
 function renderSpread(spread) {
   const slots = spreadEl.querySelectorAll('.card-slot');
   spreadEl.hidden = false;
@@ -69,6 +118,7 @@ form.addEventListener('submit', (e) => {
   currentSpread = drawSpread(DECK);
   renderSpread(currentSpread);
   readingZone.hidden = false;
-  statusEl.textContent = '';
-  readingEl.textContent = fallbackText(currentSpread);
+  requestReading(currentSpread);
 });
+
+retryBtn.addEventListener('click', () => requestReading(currentSpread));
