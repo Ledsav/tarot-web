@@ -40,25 +40,29 @@
       <button id="draw-btn" type="submit">DRAW YOUR SPREAD →</button>
     </form>
 
-    <section id="spread" class="spread" aria-live="polite" hidden>
-      <div class="card-slot">
-        <div class="card"><div class="card-face card-back"></div><div class="card-face card-front"><img alt=""></div></div>
-        <p class="card-position"></p>
-      </div>
-      <div class="card-slot">
-        <div class="card"><div class="card-face card-back"></div><div class="card-face card-front"><img alt=""></div></div>
-        <p class="card-position"></p>
-      </div>
-      <div class="card-slot">
-        <div class="card"><div class="card-face card-back"></div><div class="card-face card-front"><img alt=""></div></div>
-        <p class="card-position"></p>
-      </div>
+    <section id="stage" class="stage" hidden>
+      <ol class="pips" aria-hidden="true">
+        <li class="pip" data-label="Past"></li>
+        <li class="pip" data-label="Present"></li>
+        <li class="pip" data-label="Future"></li>
+      </ol>
+
+      <div class="card-fan" role="group" aria-label="Pick a card"></div>
+      <p class="tap-hint">Pick a card</p>
+
+      <p class="stage-position"></p>
+      <div class="stage-meaning" aria-live="polite" hidden></div>
+
+      <button type="button" class="stage-next" hidden></button>
     </section>
 
-    <section class="reading-zone" hidden>
-      <p id="reading-status" class="reading-status" role="status"></p>
+    <section class="conclusion-zone" hidden>
+      <div class="mini-cards" aria-hidden="true"></div>
       <div id="reading" class="reading"></div>
-      <button id="retry-btn" type="button" class="retry-btn" hidden>Ask the cards again</button>
+      <div class="conclusion-actions">
+        <button id="share-btn" type="button" class="share-btn">Share this reading</button>
+        <button id="retry-btn" type="button" class="retry-btn">Ask the cards again</button>
+      </div>
     </section>
   </main>
 

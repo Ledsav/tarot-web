@@ -8,6 +8,8 @@
   --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+[hidden] { display: none !important; }
+
 html, body { min-height: 100%; }
 body {
   font-family: 'Inter', sans-serif;
@@ -64,31 +66,121 @@ body {
 }
 .prompt-chip:hover { background: rgba(201, 168, 76, 0.2); border-color: var(--gold); }
 
-/* Spread */
-.spread { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-.card-slot { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
-.card {
-  position: relative; width: 100%; aspect-ratio: 300 / 520;
+/* Staged single-card reveal */
+.stage {
+  display: flex; flex-direction: column; align-items: center; gap: 1.4rem;
+}
+
+/* Progress pips */
+.pips { list-style: none; display: flex; gap: 0.75rem; align-items: center; }
+.pip {
+  width: 10px; height: 10px; border-radius: 999px;
+  border: 1px solid var(--gold); background: transparent;
+  transition: transform 0.3s var(--ease-out), background 0.3s var(--ease-out);
+}
+.pip.done { background: rgba(201, 168, 76, 0.55); }
+.pip.active { background: var(--gold); transform: scale(1.5); box-shadow: 0 0 10px rgba(201, 168, 76, 0.6); }
+
+/* Fanned deck — pick a card, for the illusion of choice */
+.card-fan {
+  position: relative; margin: 0 auto;
+  width: 100%; max-width: 340px;
+  height: clamp(250px, 66vw, 320px);
+}
+.fan-card {
+  position: absolute; bottom: 0; left: 50%;
+  width: clamp(120px, 34vw, 150px);
+  margin-left: calc(clamp(120px, 34vw, 150px) * -0.5);
+  aspect-ratio: 300 / 520;
+  padding: 0; border: 0; background: none; cursor: pointer;
+  transform-origin: 50% 100%;
+  transform: rotate(var(--angle, 0deg));
+  transition: transform 0.5s var(--ease-out), opacity 0.5s var(--ease-out);
+  perspective: 1000px;
+}
+.fan-card:hover:not(.chosen):not(.dismissed) { transform: rotate(var(--angle, 0deg)) translateY(-18px); }
+.fan-card .card {
+  position: relative; width: 100%; height: 100%;
   transform-style: preserve-3d; transition: transform 0.7s var(--ease-out);
 }
-.card.revealed { transform: rotateY(180deg); }
+.fan-card .card.revealed { transform: rotateY(180deg); }
+/* the chosen card straightens, rises to center, and grows */
+.fan-card.chosen { z-index: 10; cursor: default; transform: rotate(0deg) translateY(-6%) scale(1.35); }
+/* the others scatter downward and fade away */
+.fan-card.dismissed { opacity: 0; pointer-events: none; transform: rotate(var(--angle, 0deg)) translateY(48px) scale(0.9); }
+
 .card-face {
   position: absolute; inset: 0; backface-visibility: hidden;
-  border-radius: 8px; overflow: hidden;
-  border: 1px solid rgba(201, 168, 76, 0.5);
+  border-radius: 8px; overflow: hidden; border: 1px solid rgba(201, 168, 76, 0.5);
 }
-.card-back { background: url('design/assets/cards/card-back.svg') center / cover no-repeat; }
+.card-back { border: 0; background: url('design/assets/cards/card-back.svg') center / cover no-repeat; }
 .card-front { transform: rotateY(180deg); background: var(--ink); }
 .card-front img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .card-front.reversed img { transform: rotate(180deg); }
-.card-position { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; }
 
-/* Reading */
-.reading-zone { display: flex; flex-direction: column; gap: 1rem; }
-.reading-status { color: var(--gold); font-style: italic; min-height: 1.2em; }
-.reading { font-size: 1.05rem; line-height: 1.7; white-space: pre-wrap; }
+.tap-hint {
+  color: var(--gold); font-style: italic; font-size: 0.9rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+.tap-hint[hidden] { display: none; }
+
+.stage-position {
+  font-family: 'Playfair Display', serif; color: var(--gold);
+  font-size: 0.95rem; letter-spacing: 0.15em; text-transform: uppercase;
+  text-align: center;
+}
+
+.stage-meaning {
+  font-size: 1.05rem; line-height: 1.7; text-align: center;
+  max-width: 52ch; animation: fadeInUp 0.6s var(--ease-out) both;
+}
+.stage-meaning[hidden] { display: none; }
+.stage-meaning.shimmer {
+  min-height: 4.5rem; width: 100%; border-radius: 6px; animation: none;
+  background: linear-gradient(100deg,
+    rgba(242, 232, 213, 0.05) 30%,
+    rgba(242, 232, 213, 0.16) 50%,
+    rgba(242, 232, 213, 0.05) 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.stage-next {
+  cursor: pointer; background: var(--oxblood); color: var(--parchment);
+  border: 1px solid var(--gold); font-family: 'Playfair Display', serif;
+  letter-spacing: 0.12em; padding: 0.85rem 1.6rem; border-radius: 4px;
+  animation: fadeInUp 0.5s var(--ease-out) both;
+  transition: background 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+.stage-next:hover { background: #7f2020; transform: translateY(-2px); }
+.stage-next[hidden] { display: none; }
+
+/* Conclusion */
+.conclusion-zone { display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
+.mini-cards { display: flex; gap: 0.6rem; justify-content: center; }
+.mini-card {
+  width: clamp(88px, 26vw, 130px); aspect-ratio: 300 / 520; object-fit: cover;
+  border-radius: 6px; border: 1px solid rgba(201, 168, 76, 0.5);
+  animation: fadeInUp 0.5s var(--ease-out) both;
+}
+.mini-card.reversed { transform: rotate(180deg); }
+.reading { font-size: 1.05rem; line-height: 1.7; text-align: center; max-width: 52ch; }
 .reading p { margin-bottom: 0.9rem; }
+
+.conclusion-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
 .retry-btn { align-self: center; }
+.share-btn {
+  cursor: pointer; background: var(--gold); color: var(--ink);
+  border: 1px solid var(--gold); font-family: 'Playfair Display', serif;
+  letter-spacing: 0.12em; padding: 0.85rem 1.6rem; border-radius: 4px;
+  transition: background 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+.share-btn:hover { background: #d8b968; transform: translateY(-2px); }
+.share-btn.copied { background: #6f9a5f; color: var(--parchment); border-color: #6f9a5f; }
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 /* Sound toggle */
 .sound-toggle {
@@ -99,12 +191,12 @@ body {
   padding: 0.45rem 0.9rem;
 }
 
-@media (max-width: 520px) {
-  .spread { gap: 0.5rem; }
-  .card-position { font-size: 0.65rem; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .card { transition: none; }
-  #draw-btn, .retry-btn { transition: none; }
+  .fan-card, .fan-card .card { transition: none; }
+  #draw-btn, .retry-btn, .stage-next, .share-btn, .pip { transition: none; }
+  .tap-hint,
+  .stage-meaning,
+  .stage-meaning.shimmer,
+  .stage-next,
+  .mini-card { animation: none; }
 }
