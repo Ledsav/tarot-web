@@ -5,20 +5,19 @@
 function doPost(e) {
   try {
     var body = JSON.parse(e.postData.contents);
+
+    // NEW: tarot reading request → return JSON { reading }.
     if (body.type === 'reading') {
       return jsonOut({ reading: generateReading(body) });
     }
-    appendEmail(body.email);            // existing waitlist behavior
-    return jsonOut({ ok: true });
+
+    // EXISTING waitlist behavior — unchanged.
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    if (body.email) sheet.appendRow([new Date(), body.email]);
+    return ContentService.createTextOutput('ok');
   } catch (err) {
     return jsonOut({ error: String(err && err.message || err) });
   }
-}
-
-function appendEmail(email) {
-  if (!email) return;
-  SpreadsheetApp.getActiveSpreadsheet().getActiveSheet()
-    .appendRow([new Date(), email]);
 }
 
 function generateReading(body) {
