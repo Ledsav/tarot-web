@@ -77,7 +77,10 @@ async function requestReading(spread) {
     statusEl.textContent = '';
     renderReading(data.reading);
   } catch (err) {
-    statusEl.textContent = 'The connection to the cards faltered — here is what they show plainly.';
+    const busy = /rate_limited/i.test(err && err.message);
+    statusEl.textContent = busy
+      ? 'The cards are in high demand right now — here is what they show plainly.'
+      : 'The connection to the cards faltered — here is what they show plainly.';
     renderReading(fallbackText(spread));
     retryBtn.hidden = false;
   } finally {
