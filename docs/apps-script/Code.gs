@@ -51,7 +51,8 @@ function generateReading(body) {
     payload: JSON.stringify({
       model: 'openai/gpt-oss-120b',
       temperature: 0.6,
-      max_tokens: 800,
+      max_tokens: 2000,
+      reasoning_effort: 'low',
       messages: [
         { role: 'system', content: system },
         { role: 'user', content: user },
