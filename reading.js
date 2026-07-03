@@ -125,3 +125,11 @@ form.addEventListener('submit', (e) => {
 });
 
 retryBtn.addEventListener('click', () => requestReading(currentSpread));
+
+// Preset question chips: clicking one fills the question field.
+document.querySelectorAll('.prompt-chip').forEach((chip) => {
+  chip.addEventListener('click', () => {
+    questionEl.value = chip.textContent.trim();
+    questionEl.focus();
+  });
+});
