@@ -25,23 +25,50 @@ body {
 
 .reading-page {
   position: relative; z-index: 1;
-  max-width: 760px; margin: 0 auto;
-  padding: 4rem 1.25rem 5rem;
-  display: flex; flex-direction: column; gap: 2.5rem;
+  max-width: 640px; margin: 0 auto;
+  padding: clamp(3.5rem, 10vh, 6rem) 1.25rem 5rem;
+  display: flex; flex-direction: column; gap: 2.75rem;
 }
-.wordmark { font-family: 'Playfair Display', serif; letter-spacing: 0.4em; color: var(--gold); font-size: 0.9rem; }
-.headline { font-family: 'Playfair Display', serif; font-weight: 900; font-size: clamp(2rem, 7vw, 3.25rem); line-height: 1.05; margin-top: 0.5rem; }
 
-.ask-form { display: flex; flex-direction: column; gap: 0.9rem; }
-.form-label { color: var(--gold); font-size: 0.85rem; letter-spacing: 0.05em; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* A quiet radiant glow behind the hero — the sun the cards answer under */
+.glow {
+  position: absolute; top: -6rem; left: 50%; transform: translateX(-50%);
+  width: min(640px, 120vw); height: 640px;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.22) 0%, rgba(201, 168, 76, 0.07) 40%, transparent 72%);
+  filter: blur(6px);
+  pointer-events: none; z-index: -1;
+  animation: glow-pulse 7s ease-in-out infinite;
+}
+@keyframes glow-pulse { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+
+.reading-head { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.wordmark { font-family: 'Playfair Display', serif; letter-spacing: 0.4em; color: var(--gold); font-size: 0.85rem; }
+.headline {
+  font-family: 'Playfair Display', serif; font-weight: 900;
+  font-size: clamp(2.25rem, 7vw, 3.75rem); line-height: 1.08;
+}
+.headline em { font-style: italic; color: var(--gold); }
+.subtitle { display: block; color: rgba(242, 232, 213, 0.55); font-size: 1rem; font-style: italic; }
+
+.ask-form { display: flex; flex-direction: column; gap: 1.5rem; align-items: center; }
+
+.question-box { width: 100%; }
 #question {
+  width: 100%;
   background: rgba(242, 232, 213, 0.06); border: 1px solid rgba(201, 168, 76, 0.4);
   color: var(--parchment); font-family: inherit; font-size: 1rem;
-  padding: 0.9rem 1rem; border-radius: 4px; resize: vertical;
+  padding: 0.9rem 1rem; border-radius: 6px; resize: vertical;
 }
 #question::placeholder { color: rgba(242, 232, 213, 0.4); }
+
 #draw-btn, .retry-btn {
-  align-self: flex-start; cursor: pointer;
+  cursor: pointer;
   background: var(--oxblood); color: var(--parchment);
   border: 1px solid var(--gold); font-family: 'Playfair Display', serif;
   letter-spacing: 0.12em; padding: 0.85rem 1.6rem; border-radius: 4px;
@@ -51,11 +78,12 @@ body {
 #draw-btn:disabled { opacity: 0.55; cursor: wait; transform: none; }
 
 /* Prompt chips */
-.prompt-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.prompt-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: center; }
 .prompt-chips-label {
-  width: 100%; margin-bottom: 0.1rem;
-  color: rgba(242, 232, 213, 0.55); font-size: 0.8rem; font-style: italic;
+  width: 100%; text-align: center; margin-bottom: 0.2rem;
+  color: rgba(242, 232, 213, 0.5); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
 }
+.prompt-chips-label::before, .prompt-chips-label::after { content: '—'; margin: 0 0.6em; color: var(--gold); }
 .prompt-chip {
   cursor: pointer;
   background: rgba(201, 168, 76, 0.08); color: var(--parchment);
@@ -168,7 +196,6 @@ body {
 .reading p { margin-bottom: 0.9rem; }
 
 .conclusion-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
-.retry-btn { align-self: center; }
 .share-btn {
   cursor: pointer; background: var(--gold); color: var(--ink);
   border: 1px solid var(--gold); font-family: 'Playfair Display', serif;
@@ -198,5 +225,6 @@ body {
   .stage-meaning,
   .stage-meaning.shimmer,
   .stage-next,
-  .mini-card { animation: none; }
+  .mini-card,
+  .glow { animation: none; }
 }
