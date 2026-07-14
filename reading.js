@@ -244,20 +244,21 @@ nextBtn.addEventListener('click', goNext);
 // --- Share a simple text summary of the reading ---
 function buildSummary() {
   const q = questionEl.value.trim();
-  const cardLines = state.spread.map((s) =>
-    `${s.position} — ${s.card.name}${s.orientation === 'reversed' ? ' (reversed)' : ''}`);
+  const cardBlocks = state.spread.map((s, i) => {
+    const label = `${s.position} — ${s.card.name}${s.orientation === 'reversed' ? ' (reversed)' : ''}`;
+    const meaning = (state.parts && state.parts.cards[i]) ||
+      (s.orientation === 'reversed' ? s.card.reversed : s.card.upright);
+    return `${label}\n${meaning}`;
+  });
   const conclusion = (state.parts && state.parts.conclusion) ||
     'The cards have spoken.';
   const url = location.origin + location.pathname;
   return [
     q ? `My tarot reading on: "${q}"` : 'My tarot reading',
-    '',
-    ...cardLines,
-    '',
+    ...cardBlocks,
     conclusion,
-    '',
     `Read yours at ${url}`,
-  ].join('\n');
+  ].join('\n\n');
 }
 
 function flashCopied() {
