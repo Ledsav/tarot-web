@@ -6,10 +6,11 @@ A minimal, magical, mobile-first landing page for **LUX**, a tarot reading servi
 
 ## Features
 
-- Mobile-first, responsive layout (single column on mobile, 55/45 split on desktop)
+- Mobile-first, responsive layout: a title-page hero, "how a reading works", and the in-person waitlist; the reading page lays the turned card and its text out as a two-page spread on wide screens
 - Animated "parting mist" entrance — smoke clouds drift away to reveal the page
 - Staggered content reveal and a red-gloved arm rising with fanned tarot cards
-- Editorial typography: Playfair Display (display) + Inter (UI)
+- Editorial typography: Cormorant Garamond (display), EB Garamond (text), Cormorant SC (labels)
+- The Lit X logo and favicon set, in `design/logo/`
 - Email capture wired to a Google Sheet via a Google Apps Script webhook
 - Respects `prefers-reduced-motion`
 
@@ -18,7 +19,8 @@ A minimal, magical, mobile-first landing page for **LUX**, a tarot reading servi
 ```
 tarot-web/
 ├── index.html              # Page markup
-├── style.css               # All styling + animations (mobile-first)
+├── base.css                # Shared tokens, buttons and page frame (both pages)
+├── style.css               # Landing page styling + animations (mobile-first)
 ├── main.js                 # Email form handler (posts to Google Sheets)
 ├── design/
 │   └── assets/             # Background, arm, smoke, and card images

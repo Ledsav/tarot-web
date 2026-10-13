@@ -33,6 +33,6 @@ form.addEventListener('submit', async (e) => {
   } catch {
     errorEl.textContent = 'Unable to connect. Please try again.';
     btn.disabled = false;
-    btn.textContent = 'JOIN →';
+    btn.textContent = 'Reserve a seat';
   }
 });

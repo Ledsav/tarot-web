@@ -8,18 +8,27 @@ const form = document.getElementById('ask-form');
 const questionEl = document.getElementById('question');
 
 const stage = document.getElementById('stage');
-const pips = [...stage.querySelectorAll('.pip')];
+const pips = [...document.querySelectorAll('.pip')];
 const fan = stage.querySelector('.card-fan');
 const tapHint = stage.querySelector('.tap-hint');
 const stagePosition = stage.querySelector('.stage-position');
 const stageMeaning = stage.querySelector('.stage-meaning');
 const nextBtn = stage.querySelector('.stage-next');
+const stageQuestion = stage.querySelector('.stage-question');
 
 const conclusionZone = document.querySelector('.conclusion-zone');
 const miniCards = conclusionZone.querySelector('.mini-cards');
 const readingEl = document.getElementById('reading');
 const retryBtn = document.getElementById('retry-btn');
 const shareBtn = document.getElementById('share-btn');
+const editionTitle = conclusionZone.querySelector('.edition-title');
+const editionColophon = conclusionZone.querySelector('.edition-colophon');
+
+const NUMERALS = ['I', 'II', 'III'];
+
+// The page has three phases (ask, stage, done); CSS keys the running head off it.
+function setPhase(phase) { document.body.dataset.phase = phase; }
+setPhase('ask');
 
 const audio = document.getElementById('bg-audio');
 const soundToggle = document.getElementById('sound-toggle');
@@ -28,7 +37,6 @@ const soundToggle = document.getElementById('sound-toggle');
 let soundOn = localStorage.getItem('lux-sound') === 'on';
 
 function reflectSound() {
-  soundToggle.textContent = soundOn ? '♪ on' : '♪ off';
   soundToggle.setAttribute('aria-pressed', String(soundOn));
   if (soundOn) audio.play().catch(() => {});
   else audio.pause();
@@ -172,11 +180,19 @@ function choose(cardBtn) {
   else setTimeout(flip, 360); // let the card reach center before it turns
 
   tapHint.hidden = true;
-  stagePosition.textContent =
-    `${position} · ${card.name}${orientation === 'reversed' ? ' (reversed)' : ''}`;
+  stagePosition.innerHTML = '';
+  const nameEl = document.createElement('span');
+  nameEl.className = 'stage-card-name';
+  nameEl.textContent = card.name;
+  const metaEl = document.createElement('span');
+  metaEl.className = 'stage-card-meta sc';
+  metaEl.textContent = `${orientation} · the ${position.toLowerCase()}`;
+  stagePosition.append(nameEl, metaEl);
   showMeaning();
   const isLast = state.index === state.spread.length - 1;
-  nextBtn.textContent = isLast ? 'Reveal what they say together' : 'Next →';
+  nextBtn.textContent = isLast
+    ? 'Reveal what they say together'
+    : `Turn to the ${state.spread[state.index + 1].position.toLowerCase()}`;
   nextBtn.hidden = false;
 }
 
@@ -195,13 +211,26 @@ function showConclusion() {
   pips.forEach((pip) => { pip.classList.add('done'); pip.classList.remove('active'); });
 
   miniCards.innerHTML = '';
-  state.spread.forEach(({ card, orientation }) => {
+  state.spread.forEach(({ card, orientation, position }, i) => {
+    const fig = document.createElement('figure');
+    fig.className = 'mini';
     const img = document.createElement('img');
     img.src = card.image;
-    img.alt = '';
+    img.alt = `${card.name}${orientation === 'reversed' ? ', reversed' : ''}`;
     img.className = 'mini-card' + (orientation === 'reversed' ? ' reversed' : '');
-    miniCards.appendChild(img);
+    const cap = document.createElement('figcaption');
+    cap.innerHTML = '<span class="mini-num"></span><span class="mini-name"></span><span class="mini-pos sc"></span>';
+    cap.querySelector('.mini-num').textContent = NUMERALS[i];
+    cap.querySelector('.mini-name').textContent = card.name;
+    cap.querySelector('.mini-pos').textContent = `${position}${orientation === 'reversed' ? ' · reversed' : ''}`;
+    fig.append(img, cap);
+    miniCards.appendChild(fig);
   });
+
+  const q = questionEl.value.trim();
+  editionTitle.textContent = q ? `“${q}”` : 'Three cards, drawn tonight';
+  const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  editionColophon.textContent = `Drawn ${date} · Past, present, future`;
 
   const conclusion = (state.parts && state.parts.conclusion) ||
     'The cards have spoken — let their images settle in you.';
@@ -214,6 +243,7 @@ function showConclusion() {
 
   stage.hidden = true;
   conclusionZone.hidden = false;
+  setPhase('done');
   conclusionZone.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -226,9 +256,14 @@ form.addEventListener('submit', (e) => {
   state.parts = null;
   state.revealed = false;
 
+  const q = questionEl.value.trim();
+  stageQuestion.textContent = q ? `“${q}”` : '';
+  stageQuestion.hidden = !q;
+
   form.hidden = true;
   conclusionZone.hidden = true;
   stage.hidden = false;
+  setPhase('stage');
   renderFan();
   fetchReading(state.spread); // one request, in the background
   stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -240,6 +275,25 @@ fan.addEventListener('click', (e) => {
   if (card && fan.contains(card)) choose(card);
 });
 nextBtn.addEventListener('click', goNext);
+
+// The card under a mouse pointer leans toward it, like a card held in the hand.
+fan.addEventListener('pointermove', (e) => {
+  if (e.pointerType !== 'mouse' || prefersReducedMotion()) return;
+  const card = e.target.closest('.fan-card:not(.chosen):not(.dismissed)');
+  if (!card) return;
+  const r = card.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width - 0.5;
+  const y = (e.clientY - r.top) / r.height - 0.5;
+  card.style.setProperty('--tilt-x', `${(-y * 10).toFixed(2)}deg`);
+  card.style.setProperty('--tilt-y', `${(x * 12).toFixed(2)}deg`);
+});
+fan.addEventListener('pointerout', (e) => {
+  const card = e.target.closest('.fan-card');
+  if (card && !card.contains(e.relatedTarget)) {
+    card.style.removeProperty('--tilt-x');
+    card.style.removeProperty('--tilt-y');
+  }
+});
 
 // --- Share a simple text summary of the reading ---
 function buildSummary() {
@@ -296,6 +350,7 @@ retryBtn.addEventListener('click', () => {
   stage.hidden = true;
   conclusionZone.hidden = true;
   form.hidden = false;
+  setPhase('ask');
   form.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 

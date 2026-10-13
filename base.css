@@ -1,0 +1,106 @@
+/* ===== LUX — shared tokens and pieces for both pages =====
+   One book, two lights: vellum by day (landing), night by candle (reading).
+   Rules borrowed from quiet-luxury editorial sites: square corners, no shadows
+   at rest, depth from two paper tones, hairlines, one accent per screen. */
+
+:root {
+  /* day */
+  --vellum: #EEE4CF;
+  --sand: #E4D7BC;            /* the half-step deeper paper, for sections */
+  --ink: #221A15;
+  --ink-soft: #5E4D3E;
+  --hairline: rgba(156, 120, 50, 0.38);
+  /* night */
+  --night: #16141B;
+  --night-2: #1E1B24;         /* the half-step lighter cloth, for panels */
+  --night-text: #E9DFC9;
+  --night-soft: #A79A86;
+  --night-hairline: rgba(205, 169, 94, 0.26);
+  /* accents */
+  --oxblood: #5C1916;
+  --oxblood-deep: #461210;
+  --gilt: #9C7832;            /* gold on light grounds */
+  --gilt-bright: #CDA95E;     /* gold on dark grounds */
+  --gilt-foil: linear-gradient(145deg, #E7CF8F, #9C7832 45%, #E2C47E 70%, #8A6A2A);
+
+  --display: 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
+  --body: 'EB Garamond', Garamond, Georgia, serif;
+  --label: 'Cormorant SC', 'Cormorant Garamond', Georgia, serif;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --measure: 680px;           /* reading column */
+
+  /* legacy names */
+  --parchment: var(--vellum);
+  --gold: var(--gilt-bright);
+}
+
+/* Small-caps label voice: eyebrows, labels, captions */
+.sc {
+  font-family: var(--label);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: lowercase;
+}
+
+/* Hairline frame around the viewport, like the edge of a printed page */
+.page-frame {
+  position: fixed;
+  inset: 10px;
+  border: 1px solid var(--hairline);
+  pointer-events: none;
+  z-index: 40;
+}
+
+/* ===== Primary action: one per screen, solid oxblood, square ===== */
+.btn {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.75rem 1.75rem;
+  border: 1px solid var(--oxblood);
+  border-radius: 0;
+  background: var(--oxblood);
+  color: var(--vellum);
+  font-family: var(--label);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.16em;
+  text-transform: lowercase;
+  text-decoration: none;
+  transition: background 0.15s var(--ease-out), border-color 0.15s var(--ease-out), transform 0.12s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+@media (hover: hover) {
+  .btn:hover { background: var(--oxblood-deep); border-color: var(--oxblood-deep); }
+}
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: 0.55; cursor: wait; transform: none; }
+.btn:focus-visible { outline: 1px solid currentColor; outline-offset: 3px; }
+
+/* Secondary action: an italic link whose underline thickens on hover */
+.textlink {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0.25rem 0;
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+  text-decoration-color: var(--gilt);
+  transition: text-decoration-thickness 0.15s var(--ease-out), color 0.15s var(--ease-out);
+}
+@media (hover: hover) {
+  .textlink:hover { text-decoration-thickness: 2px; }
+}
+.textlink:focus-visible { outline: 1px solid currentColor; outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn, .textlink { transition: none; }
+}
